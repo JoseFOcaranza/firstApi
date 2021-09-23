@@ -2,6 +2,9 @@ const db = require("../models/index");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
+const bcrypt = require("bcryptjs");
+
+const uploadImages = require("../utils/uploadImages");
 const community = db.community;
 const address = db.address;
 
@@ -21,18 +24,25 @@ exports.createCommunity = async (req, res) => {
       where: { id: body.addressId, statusDelete: false },
     });
 
+    let logo = await uploadImages.fileUpload(body.logo, "/logos");
+
+    let encriptedPassword = bcrypt.hashSync(body.password, 10);
+
     if (!findAddress)
       return res.status(404).send({ msg: "Address no encontrado" });
 
     const create = await community.create({
+      email: body.email,
+      password: encriptedPassword,
       name: body.name,
       type: body.type,
       addressId: body.addressId,
+      logo: logo,
     });
 
     return res.status(201).send({ message: "Comunidad creada correctamente" });
   } catch (error) {
-    return res.status(500).send(message.error);
+    return res.status(500).send(error.message);
   }
 };
 
@@ -59,7 +69,7 @@ exports.getCommunities = async (req, res) => {
     return res.status(200).send(find);
   } catch (error) {
     console.error(error);
-    return res.status(500).send(message.error);
+    return res.status(500).send(error.message);
   }
 };
 
@@ -91,7 +101,7 @@ exports.updateCommunites = async (req, res) => {
       .status(200)
       .send({ message: "Comunidad se actualizo correctamente" });
   } catch (error) {
-    return res.status(500).send(message.error);
+    return res.status(500).send(error.message);
   }
 };
 
@@ -113,6 +123,6 @@ exports.deleteCommunity = async (req, res) => {
       .status(200)
       .send({ message: "Comunidad eliminada correctamente" });
   } catch (error) {
-    return res.status(500).send(message.error);
+    return res.status(500).send(error.message);
   }
 };

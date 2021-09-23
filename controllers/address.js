@@ -20,7 +20,7 @@ exports.createAddress = async (req, res) => {
 
     return res.status(200).send({ msg: "Direccion creada correctamente" });
   } catch (error) {
-    return res.status(500).send(message.error);
+    return res.status(500).send(error.message);
   }
 };
 
@@ -34,7 +34,7 @@ exports.getAddresses = async (req, res) => {
     });
     return res.status(200).send(find);
   } catch (error) {
-    return res.status(500).send(message.error);
+    return res.status(500).send(error.message);
   }
 };
 
@@ -56,7 +56,7 @@ exports.updateAddress = async (req, res) => {
     find.save();
     return res.status(200).send({ msg: "Address actualizada correctamente" });
   } catch (error) {
-    return res.status(500).send(message.error);
+    return res.status(500).send(error.message);
   }
 };
 
@@ -73,6 +73,6 @@ exports.deleteAddress = async (req, res) => {
 
     return res.status(200).send({ msg: "Address eliminado correctamente" });
   } catch (error) {
-    return res.status(500).send(message.error);
+    return res.status(500).send(error.message);
   }
 };

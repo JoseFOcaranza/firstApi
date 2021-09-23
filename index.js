@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const fileUpload = require("express-fileupload");
 const enrutador = require("./routes/routes");
 const db = require("./models/index");
 
@@ -18,10 +19,12 @@ app.use(morgan("dev"));
 
 app.use(express.json({ limit: "50mb" }));
 
+//statics files
+app.use(fileUpload());
+
 // routes
 app.use("/api", enrutador);
-
-//statics files
+app.use("/public", express.static(__dirname + "/public"));
 
 //start
 app.listen(3000, () => {

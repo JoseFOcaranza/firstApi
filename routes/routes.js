@@ -4,11 +4,14 @@ const enrutador = express.Router();
 
 const communities = require("../controllers/communities");
 const address = require("../controllers/address");
+const generalities = require("../controllers/generalities");
+
+const { verifyToken } = require("../middleware/authorization");
 
 //rutas para comunidades
 enrutador
   .route("/communities")
-  .get(communities.getCommunities)
+  .get(verifyToken, communities.getCommunities)
   .post(communities.createCommunity);
 
 enrutador
@@ -20,12 +23,16 @@ enrutador
 
 enrutador
   .route("/address")
-  .get(address.getAddresses)
+  .get(verifyToken, address.getAddresses)
   .post(address.createAddress);
 
 enrutador
   .route("/address/:id")
   .put(address.updateAddress)
   .delete(address.deleteAddress);
+
+// rutas para generalidades
+
+enrutador.route("/login").post(generalities.login);
 
 module.exports = enrutador;
